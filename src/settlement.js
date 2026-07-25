@@ -55,7 +55,7 @@ export async function getDepositInfo(privyId) {
   return { enabled: true, address: depositAddress(privyId), maxPerUser: MAX_DEPOSIT_PER_USER };
 }
 
-// Credit incoming USDC per on-chain signature. Idempotent: each signature is
+// Credit incoming USDG per on-chain transfer. Idempotent: each signature is
 // credited at most once (unique index on deposits.sig). Safe across restarts,
 // DB retries, and double-scans. Respects the per-user deposit cap.
 export async function scanDeposits() {
@@ -249,7 +249,7 @@ export async function vaultDeposit(privyId, amount) {
 }
 
 // ---- admin: sweep deposit addresses → treasury ------------------------------
-// Lists every user's deposit address with its current USDC + SOL balance, so an
+// Lists every user's deposit address with its current USDG balance, so an
 // admin can see what's sitting uncollected across deposit addresses.
 export async function depositAddressesWithBalances() {
   if (!depositsEnabled()) return { enabled: false, addresses: [] };
@@ -270,7 +270,7 @@ export async function depositAddressesWithBalances() {
   return { enabled: true, treasury: treasuryAddress(), totalUsdg: Math.round(totalUsdg * 100) / 100, count: out.length, addresses: out };
 }
 
-// Sweeps every user's deposit address that has enough USDC (and SOL for the fee)
+// Sweeps every user's deposit address that has enough USDG
 // into the treasury. Returns a per-address result list. Safe to re-run: already
 // empty addresses are skipped, and each sweep waits for on-chain confirmation.
 export async function sweepAllDeposits() {
